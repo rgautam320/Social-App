@@ -1,0 +1,5 @@
+body {
+	background-color: #cefffb;
+	background-image: url("./assets/background.svg");
+	background-attachment: fixed;
+}
