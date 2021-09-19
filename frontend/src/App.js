@@ -5,10 +5,11 @@ import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form";
 import useStyles from "./styles";
 import memories from "./assets/logo.png";
-import { getPosts } from "./data/reducer";
+import { getPosts } from "./data/reducers/posts.reducers";
 
 const App = () => {
 	const [currentId, setCurrentId] = useState(0);
+	const [editing, setEditing] = useState(false);
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
@@ -26,12 +27,12 @@ const App = () => {
 			</AppBar>
 			<Grow in>
 				<Container>
-					<Grid container justify="space-between" alignItems="stretch" spacing={3}>
+					<Grid container className={classes.mainContainer} justifyContent="space-between" alignItems="stretch" spacing={3}>
 						<Grid item xs={12} sm={7}>
-							<Posts setCurrentId={setCurrentId} />
+							<Posts setCurrentId={setCurrentId} setEditing={setEditing} editing={editing} />
 						</Grid>
 						<Grid item xs={12} sm={4}>
-							<Form currentId={currentId} setCurrentId={setCurrentId} />
+							<Form currentId={currentId} setCurrentId={setCurrentId} editing={editing} setEditing={setEditing} />
 						</Grid>
 					</Grid>
 				</Container>

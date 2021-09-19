@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createPostAPI, deletePostAPI, getPostsAPI } from "./service";
+import { createPostAPI, deletePostAPI, getPostsAPI, likePostAPI, updatePostAPI } from "../services/posts.services";
 
 export const getPosts = createAsyncThunk("social/posts", async () => {
 	try {
 		const response = await getPostsAPI();
-		console.log(response);
 		return response;
 	} catch (error) {
 		console.log(error);
@@ -40,6 +39,34 @@ export const deletePost = createAsyncThunk("social/delete", async (id) => {
 	}
 });
 
+export const updatePost = createAsyncThunk("social/update", async (payload) => {
+	try {
+		const response = await updatePostAPI(payload.id, payload.post);
+		if (response) {
+			return response;
+		} else {
+			return null;
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+});
+
+export const likePost = createAsyncThunk("social/like", async (id) => {
+	try {
+		const response = await likePostAPI(id);
+		if (response) {
+			return response;
+		} else {
+			return null;
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+});
+
 const initialState = {
 	post: [],
 };
@@ -57,6 +84,12 @@ export const postSlice = createSlice({
 		},
 		[deletePost.fulfilled]: (state, action) => {
 			state.post = state.post.filter((post) => post._id !== action.payload);
+		},
+		[updatePost.fulfilled]: (state, action) => {
+			state.post = state.post.map((post) => (post._id === action.payload._id ? action.payload : post));
+		},
+		[likePost.fulfilled]: (state, action) => {
+			state.post = state.post.map((post) => (post._id === action.payload._id ? action.payload : post));
 		},
 	},
 });

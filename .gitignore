@@ -1,2 +1,3 @@
-# Ignoring Node Modules
+# Ignoring Node Modules and .env
 node_modules
+.env

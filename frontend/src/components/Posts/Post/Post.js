@@ -7,9 +7,9 @@ import moment from "moment";
 import { useDispatch } from "react-redux";
 
 import useStyles from "./styles";
-import { deletePost } from "../../../data/reducer";
+import { deletePost, likePost } from "../../../data/reducers/posts.reducers";
 
-const Post = ({ post, setCurrentId }) => {
+const Post = ({ post, setCurrentId, setEditing, editing }) => {
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
@@ -21,8 +21,15 @@ const Post = ({ post, setCurrentId }) => {
 				<Typography variant="body2">{moment(post?.createdAt).fromNow()}</Typography>
 			</div>
 			<div className={classes.overlay2}>
-				<Button style={{ color: "white" }} size="small" onClick={() => setCurrentId(post?._id)}>
-					<MoreHorizIcon fontSize="default" />
+				<Button
+					style={{ color: "white" }}
+					size="small"
+					onClick={() => {
+						setEditing(!editing);
+						setCurrentId(post?._id);
+					}}
+				>
+					<MoreHorizIcon />
 				</Button>
 			</div>
 			<div className={classes.details}>
@@ -39,7 +46,7 @@ const Post = ({ post, setCurrentId }) => {
 				</Typography>
 			</CardContent>
 			<CardActions className={classes.cardActions}>
-				<Button size="small" color="primary" onClick={() => {}}>
+				<Button size="small" color="primary" onClick={() => dispatch(likePost(post?._id))}>
 					<ThumbUpAltIcon fontSize="small" /> &nbsp; {post?.likeCount}
 				</Button>
 				<Button size="small" color="primary" onClick={() => dispatch(deletePost(post?._id))}>
