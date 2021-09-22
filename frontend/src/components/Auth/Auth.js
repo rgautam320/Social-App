@@ -7,10 +7,12 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Icon from "./Icon";
 import useStyles from "./styles";
 import Input from "./Input";
-import { googleSignin } from "../../data/reducers/auth.reducers";
+import { googleSignin, signin, signup } from "../../data/reducers/auth.reducers";
+
+const initialState = { firstName: "", lastName: "", email: "", password: "", confirmPassword: "" };
 
 const SignUp = () => {
-	const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
+	const [form, setForm] = useState(initialState);
 	const [isSignup, setIsSignup] = useState(false);
 
 	const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const SignUp = () => {
 	const isLoggedIn = useSelector((state) => state.auth).isLoggedIn;
 
 	const switchMode = () => {
-		setForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
+		setForm(initialState);
 		setIsSignup((prevIsSignup) => !prevIsSignup);
 		setShowPassword(false);
 	};
@@ -31,11 +33,11 @@ const SignUp = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		// if (isSignup) {
-		// 	dispatch(signup(form, history));
-		// } else {
-		// 	dispatch(signin(form, history));
-		// }
+		if (isSignup) {
+			dispatch(signup(form));
+		} else {
+			dispatch(signin(form));
+		}
 	};
 
 	const googleSuccess = async (res) => {

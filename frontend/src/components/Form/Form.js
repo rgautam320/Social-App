@@ -6,8 +6,10 @@ import FileBase from "react-file-base64";
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../data/reducers/posts.reducers";
 
+const initialState = { creator: "", title: "", message: "", tags: "", selectedFile: "" };
+
 const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
-	const [postData, setPostData] = useState({ creator: "", title: "", message: "", tags: "", selectedFile: "" });
+	const [postData, setPostData] = useState(initialState);
 	const post = useSelector((state) => (currentId ? state?.posts?.post?.find((message) => message._id === currentId) : null));
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -15,7 +17,7 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 	const clear = () => {
 		setCurrentId(0);
 		setEditing(false);
-		setPostData({ creator: "", title: "", message: "", tags: "", selectedFile: "" });
+		setPostData(initialState);
 	};
 
 	const handleSubmit = async (e) => {

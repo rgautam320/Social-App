@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { userLoginAPI, userSignupAPI } from "../services/auth.services";
 
 const initialState = {
 	user: null,
@@ -20,6 +21,30 @@ export const logout = createAsyncThunk("social/lougout", async () => {
 	return null;
 });
 
+export const signin = createAsyncThunk("social/signin", async (form) => {
+	const response = await userLoginAPI(form);
+
+	if (response?.result) {
+		localStorage.setItem("profile", JSON.stringify(response?.result));
+		localStorage.setItem("token", JSON.stringify(response?.token));
+
+		return response?.result;
+	}
+});
+
+export const signup = createAsyncThunk("social/signup", async (form) => {
+	const response = await userSignupAPI(form);
+
+	console.log(response);
+
+	if (response?.result) {
+		localStorage.setItem("profile", JSON.stringify(response?.result));
+		localStorage.setItem("token", JSON.stringify(response?.token));
+
+		return response?.result;
+	}
+});
+
 export const authSlice = createSlice({
 	name: "auth",
 	initialState,
@@ -34,6 +59,14 @@ export const authSlice = createSlice({
 			state.isLoggedIn = false;
 		},
 		[setUser.fulfilled]: (state, action) => {
+			state.user = action.payload;
+			state.isLoggedIn = true;
+		},
+		[signin.fulfilled]: (state, action) => {
+			state.user = action.payload;
+			state.isLoggedIn = true;
+		},
+		[signup.fulfilled]: (state, action) => {
 			state.user = action.payload;
 			state.isLoggedIn = true;
 		},
