@@ -35,8 +35,6 @@ export const signin = createAsyncThunk("social/signin", async (form) => {
 export const signup = createAsyncThunk("social/signup", async (form) => {
 	const response = await userSignupAPI(form);
 
-	console.log(response);
-
 	if (response?.result) {
 		localStorage.setItem("profile", JSON.stringify(response?.result));
 		localStorage.setItem("token", JSON.stringify(response?.token));

@@ -12,6 +12,7 @@ export const getPosts = createAsyncThunk("social/posts", async () => {
 });
 
 export const createPost = createAsyncThunk("social/create", async (post) => {
+	console.log(post);
 	try {
 		const response = await createPostAPI(post);
 		if (response) {

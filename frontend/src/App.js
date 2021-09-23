@@ -17,7 +17,7 @@ const App = () => {
 		if (user && token) {
 			dispatch(setUser(user));
 		}
-	}, [dispatch]);
+	}, [dispatch, user, token]);
 
 	return (
 		<>

@@ -1,12 +1,21 @@
 import axios from "axios";
 
-const url = `${process.env.REACT_APP_API}`;
+const API = axios.create({ baseURL: `${process.env.REACT_APP_API}` });
+const token = `Bearer ${JSON.parse(localStorage.getItem("token"))}`;
 
-export const fetchPosts = () => axios.get(`${url}/posts`);
-export const createPost = (post) => axios.post(`${url}/posts`, post);
-export const deletePost = (id) => axios.delete(`${url}/posts/${id}`);
-export const updatePost = (id, updatedPost) => axios.patch(`${url}/posts/${id}`, updatedPost);
-export const likePost = (id) => axios.patch(`${url}/posts/${id}/like`);
+API.interceptors.request.use((req) => {
+	if (localStorage.getItem("token")) {
+		req.headers.Authorization = token;
+	}
 
-export const signin = (data) => axios.post(`${url}/user/signin`, data);
-export const signup = (data) => axios.post(`${url}/user/signup`, data);
+	return req;
+});
+
+export const fetchPosts = () => API.get(`/posts`);
+export const createPost = (post) => API.post(`/posts`, post);
+export const deletePost = (id) => API.delete(`/posts/${id}`);
+export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
+export const likePost = (id) => API.patch(`/posts/${id}/like`);
+
+export const signin = (data) => API.post(`/user/signin`, data);
+export const signup = (data) => API.post(`/user/signup`, data);

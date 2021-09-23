@@ -60,7 +60,7 @@ const SignUp = () => {
 		if (isLoggedIn) {
 			history.push("/");
 		}
-	}, [isLoggedIn]);
+	}, [isLoggedIn, history]);
 
 	return (
 		<Container component="main" maxWidth="xs">
