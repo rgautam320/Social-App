@@ -2,9 +2,11 @@ import { Container, Grid, Grow } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPosts } from "../../data/reducers/posts.reducers";
+import { logout } from "../../data/reducers/auth.reducers";
 import Form from "../Form/Form";
 import Posts from "../Posts/Posts";
 import useStyles from "./styles";
+import decode from "jwt-decode";
 
 const Home = () => {
 	const classes = useStyles();
@@ -13,9 +15,17 @@ const Home = () => {
 	const [currentId, setCurrentId] = useState(0);
 	const [editing, setEditing] = useState(false);
 
+	const token = JSON.parse(localStorage.getItem("token"));
+
 	useEffect(() => {
 		dispatch(getPosts());
-	}, [dispatch]);
+		if (token) {
+			const decodedData = decode(token);
+			if (decodedData * 1000 < new Date().getTime()) {
+				dispatch(logout());
+			}
+		}
+	}, [dispatch, token]);
 
 	return (
 		<Grow in>

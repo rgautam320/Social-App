@@ -11,8 +11,8 @@ const initialState = { title: "", message: "", tags: "", selectedFile: "" };
 const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 	const [postData, setPostData] = useState(initialState);
 	const post = useSelector((state) => (currentId ? state?.posts?.post?.find((message) => message._id === currentId) : null));
-	const user = useSelector((state) => state.auth.user);
-	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const user = useSelector((state) => state.auth).user;
+	const isLoggedIn = useSelector((state) => state.auth).isLoggedIn;
 
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -27,7 +27,7 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 		e.preventDefault();
 
 		if (!editing) {
-			dispatch(createPost({ ...postData, name: user?.name }));
+			dispatch(createPost({ ...postData, name: user?.name, creator: user?._id }));
 		} else {
 			dispatch(
 				updatePost({

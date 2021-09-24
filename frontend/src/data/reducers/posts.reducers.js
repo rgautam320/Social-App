@@ -12,7 +12,6 @@ export const getPosts = createAsyncThunk("social/posts", async () => {
 });
 
 export const createPost = createAsyncThunk("social/create", async (post) => {
-	console.log(post);
 	try {
 		const response = await createPostAPI(post);
 		if (response) {
@@ -55,8 +54,9 @@ export const updatePost = createAsyncThunk("social/update", async (payload) => {
 });
 
 export const likePost = createAsyncThunk("social/like", async (id) => {
+	const token = JSON.parse(localStorage.getItem("token"));
 	try {
-		const response = await likePostAPI(id);
+		const response = await likePostAPI(id, token);
 		if (response) {
 			return response;
 		} else {
@@ -90,7 +90,7 @@ export const postSlice = createSlice({
 			state.post = state.post.map((post) => (post._id === action.payload._id ? action.payload : post));
 		},
 		[likePost.fulfilled]: (state, action) => {
-			state.post = state.post.map((post) => (post._id === action.payload._id ? action.payload : post));
+			state.post = state?.post?.map((post) => (post?._id === action?.payload?._id ? action?.payload : post));
 		},
 	},
 });

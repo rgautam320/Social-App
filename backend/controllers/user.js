@@ -12,7 +12,7 @@ export const signin = async (req, res) => {
 			if (isPasswordCorrect) {
 				const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, "secret", { expiresIn: "1h" });
 
-				res.status(200).json({ result: { email: existingUser.email, name: existingUser.name }, token });
+				res.status(200).json({ result: existingUser, token });
 			} else {
 				res.status(400).json({ message: "Password is not correct." });
 			}
@@ -40,7 +40,7 @@ export const signup = async (req, res) => {
 
 				const token = jwt.sign({ email: result.email, id: result._id }, "secret", { expiresIn: "1h" });
 
-				res.status(200).json({ result: { email: result.email, name: `${firstName} ${lastName}` }, token });
+				res.status(200).json({ result, token });
 			}
 		}
 	} catch (error) {
