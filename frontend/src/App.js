@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Auth from "./components/Auth/Auth";
 import Navbar from "./components/Navbar/Navbar";
 import { Container } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { setUser } from "./data/reducers/auth.reducers";
+import PostDetails from "./components/PostDetails/PostDetails";
 
 const App = () => {
 	const user = JSON.parse(localStorage.getItem("profile"));
@@ -22,11 +23,14 @@ const App = () => {
 	return (
 		<>
 			<BrowserRouter>
-				<Container maxWidth="lg">
+				<Container maxWidth="xl">
 					<Navbar />
 					<Switch>
-						<Route exact path="/" component={Home} />
-						<Route exact path="/auth" component={Auth} />
+						<Route exact path="/" component={() => <Redirect to="/posts" />} />
+						<Route exact path="/posts" component={Home} />
+						<Route exact path="/posts/search" component={Home} />
+						<Route exact path="/posts/:id" component={PostDetails} />
+						<Route exact path="/auth" component={() => (user ? <Redirect to="/posts" /> : <Auth />)} />
 					</Switch>
 				</Container>
 			</BrowserRouter>
