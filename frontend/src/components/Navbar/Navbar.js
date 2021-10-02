@@ -19,12 +19,12 @@ const Navbar = () => {
 
 	return (
 		<AppBar className={classes.appBar} position="static" color="inherit">
-			<div className={classes.brandContainer}>
-				<Typography component={Link} to="/" className={classes.heading} variant="h2" align="center">
+			<Link className={classes.brandContainer} to="/posts">
+				<Typography className={classes.heading} variant="h2" align="center">
 					Social App
 				</Typography>
 				<img className={classes.image} src={logo} alt="icon" height="60" />
-			</div>
+			</Link>
 			<Toolbar className={classes.toolbar}>
 				{user ? (
 					<div className={classes.profile}>

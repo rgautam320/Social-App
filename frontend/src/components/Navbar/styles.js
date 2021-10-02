@@ -3,8 +3,8 @@ import { deepPurple } from "@material-ui/core/colors";
 
 export default makeStyles((theme) => ({
 	appBar: {
-		borderRadius: 15,
-		margin: "30px 0",
+		borderRadius: 5,
+		margin: "15px 0 30px 0",
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -35,6 +35,7 @@ export default makeStyles((theme) => ({
 	brandContainer: {
 		display: "flex",
 		alignItems: "center",
+		textDecoration: "none",
 	},
 	purple: {
 		color: theme.palette.getContrastText(deepPurple[500]),

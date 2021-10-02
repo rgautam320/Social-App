@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createPostAPI, deletePostAPI, getPostsAPI, likePostAPI, updatePostAPI } from "../services/posts.services";
+import { createPostAPI, deletePostAPI, getPostsAPI, likePostAPI, updatePostAPI, getPostsBySearchAPI } from "../services/posts.services";
 
 export const getPosts = createAsyncThunk("social/posts", async () => {
 	try {
@@ -8,6 +8,15 @@ export const getPosts = createAsyncThunk("social/posts", async () => {
 	} catch (error) {
 		console.log(error);
 		return null;
+	}
+});
+
+export const getPostsBySearch = createAsyncThunk("social/postsBySearch", async (searchQuery) => {
+	try {
+		const response = await getPostsBySearchAPI(searchQuery);
+		return response;
+	} catch (error) {
+		console.log(error);
 	}
 });
 
@@ -78,6 +87,9 @@ export const postSlice = createSlice({
 	reducer: {},
 	extraReducers: {
 		[getPosts.fulfilled]: (state, action) => {
+			state.post = action.payload;
+		},
+		[getPostsBySearch.fulfilled]: (state, action) => {
 			state.post = action.payload;
 		},
 		[createPost.fulfilled]: (state, action) => {
