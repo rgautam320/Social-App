@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createPostAPI, deletePostAPI, getPostsAPI, likePostAPI, updatePostAPI, getPostsBySearchAPI } from "../services/posts.services";
 
-export const getPosts = createAsyncThunk("social/posts", async () => {
+export const getPosts = createAsyncThunk("social/posts", async (page) => {
 	try {
-		const response = await getPostsAPI();
+		const response = await getPostsAPI(page);
 		return response;
 	} catch (error) {
 		console.log(error);
@@ -79,30 +79,35 @@ export const likePost = createAsyncThunk("social/like", async (id) => {
 
 const initialState = {
 	post: [],
+	numberOfPages: null,
+	currentPage: null,
 };
 
 export const postSlice = createSlice({
 	name: "posts",
 	initialState,
-	reducer: {},
 	extraReducers: {
 		[getPosts.fulfilled]: (state, action) => {
-			state.post = action.payload;
+			state.post = action.payload?.posts;
+			state.currentPage = action.payload?.currentPage;
+			state.numberOfPages = action.payload?.numberOfPages;
 		},
 		[getPostsBySearch.fulfilled]: (state, action) => {
-			state.post = action.payload;
+			state.post = action.payload?.posts;
+			state.currentPage = action.payload?.currentPage;
+			state.numberOfPages = action.payload?.numberOfPages;
 		},
 		[createPost.fulfilled]: (state, action) => {
 			state.post = [...state.post, action.payload];
 		},
 		[deletePost.fulfilled]: (state, action) => {
-			state.post = state.post.filter((post) => post._id !== action.payload);
+			state.post = state.post?.filter((post) => post._id !== action.payload);
 		},
 		[updatePost.fulfilled]: (state, action) => {
-			state.post = state.post.map((post) => (post._id === action.payload._id ? action.payload : post));
+			state.post = state.post?.map((post) => (post._id === action.payload?._id ? action.payload : post));
 		},
 		[likePost.fulfilled]: (state, action) => {
-			state.post = state?.post?.map((post) => (post?._id === action?.payload?._id ? action?.payload : post));
+			state.post = state.post?.map((post) => (post?._id === action?.payload?._id ? action?.payload : post));
 		},
 	},
 });

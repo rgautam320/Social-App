@@ -1,35 +1,43 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Pagination, PaginationItem } from '@material-ui/lab';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { Pagination, PaginationItem } from "@material-ui/lab";
+import { Link } from "react-router-dom";
 
-import { getPosts } from '../../data/reducers/posts.reducers';
-import useStyles from './styles';
+import { getPosts, getPostsBySearch } from "../../data/reducers/posts.reducers";
+import useStyles from "./styles";
+import { setLoading } from "../../data/reducers/loading.reducers";
 
-const Paginate = ({ page }) => {
-  const { numberOfPages } = useSelector((state) => state.posts);
-  const dispatch = useDispatch();
+const Paginate = ({ page, search, tags }) => {
+	const history = useHistory();
+	const { numberOfPages } = useSelector((state) => state.posts);
+	const dispatch = useDispatch();
 
-  const classes = useStyles();
+	const classes = useStyles();
 
-  useEffect(() => {
-    if (page) {
-      dispatch(getPosts(page));
-    }
-  }, [dispatch, page]);
+	useEffect(() => {
+		if (tags?.length !== 0 || search) {
+			dispatch(setLoading(true));
+			dispatch(getPostsBySearch({ search, tags, page }));
+			history.push(`/posts/search?page=${page}&searchQuery=${search}&tags=${tags?.join(",")}`);
+			dispatch(setLoading(false));
+		} else {
+			dispatch(setLoading(true));
+			dispatch(getPosts(page));
+			dispatch(setLoading(false));
+		}
+	}, [dispatch, page, tags, search]);
 
-  return (
-    <Pagination
-      classes={{ ul: classes.ul }}
-      count={numberOfPages}
-      page={Number(page) || 1}
-      variant="outlined"
-      color="primary"
-      renderItem={(item) => (
-        <PaginationItem {...item} component={Link} to={`/posts?page=${item?.page}`} />
-      )}
-    />
-  );
+	return (
+		<Pagination
+			classes={{ ul: classes.ul }}
+			count={numberOfPages}
+			page={Number(page) || 1}
+			variant="outlined"
+			color="primary"
+			renderItem={(item) => <PaginationItem {...item} component={Link} to={`/posts/search?page=${item?.page}&searchQuery=${search}&tags=${tags?.join(",")}`} />}
+		/>
+	);
 };
 
 export default Paginate;

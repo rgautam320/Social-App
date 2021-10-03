@@ -1,7 +1,7 @@
 import { createPost, deletePost, likePost, updatePost, fetchPosts, fetchPostsBySearch } from "../api";
 
-export const getPostsAPI = async () => {
-	const response = await fetchPosts();
+export const getPostsAPI = async (page) => {
+	const response = await fetchPosts(page);
 	if (response?.data) {
 		return response?.data;
 	} else {

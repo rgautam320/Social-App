@@ -2,20 +2,25 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import FileBase from "react-file-base64";
-
+import ChipInput from "material-ui-chip-input";
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../data/reducers/posts.reducers";
 
-const initialState = { title: "", message: "", tags: "", selectedFile: "" };
+const initialState = { title: "", message: "", selectedFile: "" };
 
 const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 	const [postData, setPostData] = useState(initialState);
 	const post = useSelector((state) => (currentId ? state?.posts?.post?.find((message) => message._id === currentId) : null));
+	const [tags, setTags] = useState([]);
 	const user = useSelector((state) => state.auth).user;
 	const isLoggedIn = useSelector((state) => state.auth).isLoggedIn;
 
 	const dispatch = useDispatch();
 	const classes = useStyles();
+
+	const handleAddChip = (tag) => setTags([...tags, tag]);
+
+	const handleDeleteChip = (chipToDelete) => setTags(tags.filter((tag) => tag !== chipToDelete));
 
 	const clear = () => {
 		setCurrentId(0);
@@ -27,12 +32,12 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 		e.preventDefault();
 
 		if (!editing) {
-			dispatch(createPost({ ...postData, name: user?.name, creator: user?._id }));
+			dispatch(createPost({ ...postData, tags: tags, name: user?.name, creator: user?._id }));
 		} else {
 			dispatch(
 				updatePost({
 					id: currentId,
-					post: { ...postData, name: user?.name },
+					post: { ...postData, tags: tags, name: user?.name },
 				})
 			);
 		}
@@ -42,6 +47,7 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 	useEffect(() => {
 		if (post && currentId && editing) {
 			setPostData(post);
+			setTags(post.tags);
 		}
 		if (!editing) {
 			setPostData({ title: "", message: "", tags: "", selectedFile: "" });
@@ -63,8 +69,8 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 			<form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
 				<Typography variant="h6">{editing ? `Editing '${post?.title}'` : "Creating a Memory"}</Typography>
 				<TextField required name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
-				<TextField required name="message" variant="outlined" label="Message" fullWidth multiline rows={4} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
-				<TextField required name="tags" variant="outlined" label="Tags (comma separated)" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(",") })} />
+				<TextField required name="message" variant="outlined" label="Message" fullWidth multiline rows={3} value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
+				<ChipInput style={{ margin: "0 0.5rem" }} required value={tags} onAdd={(chip) => handleAddChip(chip)} fullWidth onDelete={(chip) => handleDeleteChip(chip)} label="Add Tags" variant="outlined" />
 				<div className={classes.fileInput}>
 					<FileBase className={classes.imageSelection} type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
 				</div>
