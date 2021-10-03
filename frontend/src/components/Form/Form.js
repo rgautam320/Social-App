@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FileBase from "react-file-base64";
 import ChipInput from "material-ui-chip-input";
 import useStyles from "./styles";
-import { createPost, updatePost } from "../../data/reducers/posts.reducers";
+import { createPost, getPosts, updatePost } from "../../data/reducers/posts.reducers";
 
 const initialState = { title: "", message: "", selectedFile: "" };
 
@@ -26,13 +26,14 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 		setCurrentId(0);
 		setEditing(false);
 		setPostData(initialState);
+		setTags([]);
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
 		if (!editing) {
 			dispatch(createPost({ ...postData, tags: tags, name: user?.name, creator: user?._id }));
+			dispatch(getPosts(1));
 		} else {
 			dispatch(
 				updatePost({
@@ -65,7 +66,7 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 	}
 
 	return (
-		<Paper className={classes.paper}>
+		<Paper className={classes.paper} elevation={3}>
 			<form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
 				<Typography variant="h6">{editing ? `Editing '${post?.title}'` : "Creating a Memory"}</Typography>
 				<TextField required name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />

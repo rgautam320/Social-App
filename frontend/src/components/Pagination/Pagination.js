@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Pagination, PaginationItem } from "@material-ui/lab";
 import { Link } from "react-router-dom";
-
+import { showLoading, hideLoading } from "react-redux-loading-bar";
 import { getPosts, getPostsBySearch } from "../../data/reducers/posts.reducers";
 import useStyles from "./styles";
-import { setLoading } from "../../data/reducers/loading.reducers";
 
 const Paginate = ({ page, search, tags }) => {
 	const history = useHistory();
@@ -16,17 +15,23 @@ const Paginate = ({ page, search, tags }) => {
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (tags?.length !== 0 || search) {
-			dispatch(setLoading(true));
+		if (tags?.length || search) {
+			dispatch(showLoading());
+
 			dispatch(getPostsBySearch({ search, tags, page }));
 			history.push(`/posts/search?page=${page}&searchQuery=${search}&tags=${tags?.join(",")}`);
-			dispatch(setLoading(false));
-		} else {
-			dispatch(setLoading(true));
+			dispatch(hideLoading());
+		} else if (tags?.length === 0 && !search) {
+			history.push("/posts");
+			dispatch(showLoading());
 			dispatch(getPosts(page));
-			dispatch(setLoading(false));
+			dispatch(hideLoading());
+		} else {
+			dispatch(showLoading());
+			dispatch(getPosts(page));
+			dispatch(hideLoading());
 		}
-	}, [dispatch, page, tags, search]);
+	}, [dispatch, page, tags?.length, search, history, tags]);
 
 	return (
 		<Pagination

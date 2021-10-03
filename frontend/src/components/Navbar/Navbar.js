@@ -20,7 +20,7 @@ const Navbar = () => {
 	return (
 		<AppBar className={classes.appBar} position="static" color="inherit">
 			<Link className={classes.brandContainer} to="/posts">
-				<Typography className={classes.heading} variant="h2" align="center">
+				<Typography className={classes.heading} variant="h4" align="center">
 					Social App
 				</Typography>
 				<img className={classes.image} src={logo} alt="icon" height="60" />

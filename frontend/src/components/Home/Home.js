@@ -1,4 +1,4 @@
-import { Container, Grid, Grow, Paper, Button, TextField, AppBar } from "@material-ui/core";
+import { Container, Grid, Grow, Paper, TextField, AppBar } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -21,7 +21,7 @@ const Home = () => {
 	const history = useHistory();
 	const query = useQuery();
 	const page = query.get("page") || 1;
-	const searchQuery = query.get("searchQuery");
+	const searchQuery = query.get("searchQuery") || "";
 	const tagsQuery = query.get("tags");
 
 	const [currentId, setCurrentId] = useState(0);
@@ -56,32 +56,32 @@ const Home = () => {
 				dispatch(logout());
 			}
 		}
-	}, [history, dispatch]);
+	}, [history, dispatch, token]);
 
 	return (
-		<Grow in>
-			<Container maxWidth="xl">
-				<Grid container className={classes.gridContainer} justifyContent="space-between" alignItems="stretch" spacing={3}>
-					<Grid item xs={12} sm={6} md={8} lg={9}>
-						<Posts setCurrentId={setCurrentId} setEditing={setEditing} editing={editing} />
-						<center>
-							<Grid item xs={12} sm={8} md={6}>
-								<Paper style={{ margin: "1.25rem 0" }} elevation={3}>
+		<>
+			<Grow in>
+				<Container maxWidth="xl">
+					<Grid container className={classes.gridContainer} justifyContent="space-between" alignItems="stretch" spacing={3}>
+						<Grid item xs={12} sm={6} md={8} lg={9}>
+							<Posts setCurrentId={setCurrentId} setEditing={setEditing} editing={editing} />
+						</Grid>
+						<Grid item xs={12} sm={6} md={4} lg={3}>
+							<AppBar className={classes.appBarSearch} position="static" color="inherit">
+								<TextField onKeyDown={handleKeyPress} name="search" variant="outlined" label="Search Posts" fullWidth value={search} onChange={(e) => setSearch(e.target.value)} />
+								<ChipInput style={{ margin: "10px 0" }} value={tags} onAdd={(chip) => handleAddChip(chip)} onDelete={(chip) => handleDeleteChip(chip)} label="Search Tags" variant="outlined" />
+							</AppBar>
+							<Form currentId={currentId} setCurrentId={setCurrentId} editing={editing} setEditing={setEditing} />
+							<Grid item xs={12}>
+								<Paper className={classes.pagination} elevation={3}>
 									<Pagination page={page} search={search} tags={tags} />
 								</Paper>
 							</Grid>
-						</center>
+						</Grid>
 					</Grid>
-					<Grid item xs={12} sm={6} md={4} lg={3}>
-						<AppBar className={classes.appBarSearch} position="static" color="inherit">
-							<TextField onKeyDown={handleKeyPress} name="search" variant="outlined" label="Search Posts" fullWidth value={search} onChange={(e) => setSearch(e.target.value)} />
-							<ChipInput style={{ margin: "10px 0" }} value={tags} onAdd={(chip) => handleAddChip(chip)} onDelete={(chip) => handleDeleteChip(chip)} label="Search Tags" variant="outlined" />
-						</AppBar>
-						<Form currentId={currentId} setCurrentId={setCurrentId} editing={editing} setEditing={setEditing} />
-					</Grid>
-				</Grid>
-			</Container>
-		</Grow>
+				</Container>
+			</Grow>
+		</>
 	);
 };
 

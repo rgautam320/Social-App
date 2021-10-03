@@ -47,6 +47,7 @@ const SignUp = () => {
 		try {
 			dispatch(googleSignin({ result, token }));
 			history.push("/");
+			window.location.reload("/");
 		} catch (error) {
 			console.log(error);
 		}

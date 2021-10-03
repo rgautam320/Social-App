@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createPostAPI, deletePostAPI, getPostsAPI, likePostAPI, updatePostAPI, getPostsBySearchAPI } from "../services/posts.services";
+import { createPostAPI, deletePostAPI, getPostsAPI, getPostAPI, likePostAPI, updatePostAPI, getPostsBySearchAPI } from "../services/posts.services";
 
 export const getPosts = createAsyncThunk("social/posts", async (page) => {
 	try {
@@ -14,6 +14,15 @@ export const getPosts = createAsyncThunk("social/posts", async (page) => {
 export const getPostsBySearch = createAsyncThunk("social/postsBySearch", async (searchQuery) => {
 	try {
 		const response = await getPostsBySearchAPI(searchQuery);
+		return response;
+	} catch (error) {
+		console.log(error);
+	}
+});
+
+export const getPost = createAsyncThunk("social/post", async (id) => {
+	try {
+		const response = await getPostAPI(id);
 		return response;
 	} catch (error) {
 		console.log(error);
@@ -81,6 +90,7 @@ const initialState = {
 	post: [],
 	numberOfPages: null,
 	currentPage: null,
+	singlePost: null,
 };
 
 export const postSlice = createSlice({
@@ -96,6 +106,9 @@ export const postSlice = createSlice({
 			state.post = action.payload?.posts;
 			state.currentPage = action.payload?.currentPage;
 			state.numberOfPages = action.payload?.numberOfPages;
+		},
+		[getPost.fulfilled]: (state, action) => {
+			state.singlePost = action.payload;
 		},
 		[createPost.fulfilled]: (state, action) => {
 			state.post = [...state.post, action.payload];

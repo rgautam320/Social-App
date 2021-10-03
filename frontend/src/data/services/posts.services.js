@@ -1,4 +1,4 @@
-import { createPost, deletePost, likePost, updatePost, fetchPosts, fetchPostsBySearch } from "../api";
+import { createPost, deletePost, likePost, updatePost, fetchPosts, fetchPost, fetchPostsBySearch } from "../api";
 
 export const getPostsAPI = async (page) => {
 	const response = await fetchPosts(page);
@@ -11,6 +11,15 @@ export const getPostsAPI = async (page) => {
 
 export const getPostsBySearchAPI = async (searchQuery) => {
 	const response = await fetchPostsBySearch(searchQuery);
+	if (response?.data) {
+		return response?.data;
+	} else {
+		return null;
+	}
+};
+
+export const getPostAPI = async (id) => {
+	const response = await fetchPost(id);
 	if (response?.data) {
 		return response?.data;
 	} else {
