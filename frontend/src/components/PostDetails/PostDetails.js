@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { getPost, getPostsBySearch } from "../../data/reducers/posts.reducers";
 import useStyles from "./styles";
 import Post from "../Posts/Post/Post";
+import CommentSection from "./CommentSection";
 
 const PostDetails = () => {
 	const { post, singlePost } = useSelector((state) => state.posts);
@@ -48,9 +49,7 @@ const PostDetails = () => {
 								<strong>Realtime Chat - coming soon!</strong>
 							</Typography>
 							<Divider style={{ margin: "20px 0" }} />
-							<Typography variant="body1">
-								<strong>Comments - coming soon!</strong>
-							</Typography>
+							<CommentSection />
 							<Divider style={{ margin: "20px 0" }} />
 						</div>
 						<div className={classes.imageSection}>

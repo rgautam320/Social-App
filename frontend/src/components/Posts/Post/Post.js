@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardActions, CardContent, CardMedia, Button, Typography, ButtonBase } from "@material-ui/core/";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbUpAltOutlined from "@material-ui/icons/ThumbUpAltOutlined";
@@ -17,17 +17,32 @@ const Post = ({ post, setCurrentId, setEditing, editing }) => {
 
 	const user = useSelector((state) => state.auth).user;
 
+	const [likes, setLikes] = useState(post?.likes);
+
+	const userId = user?.googleId || user?._id;
+	const hasLikedPost = post?.likes?.find((like) => like === userId);
+
+	const handleLike = async () => {
+		dispatch(likePost(post._id));
+
+		if (hasLikedPost) {
+			setLikes(likes?.filter((id) => id !== userId));
+		} else {
+			setLikes([...post.likes, userId]);
+		}
+	};
+
 	const Likes = () => {
-		if (post.likes.length > 0) {
-			return post.likes.find((like) => like === (user?.googleId || user?._id)) ? (
+		if (likes?.length > 0) {
+			return likes?.find((like) => like === (user?.googleId || user?._id)) ? (
 				<>
 					<ThumbUpAltIcon fontSize="small" />
-					&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? "s" : ""}`}
+					&nbsp;{likes?.length > 2 ? `You and ${likes?.length - 1} others` : `${likes?.length} like${likes?.length > 1 ? "s" : ""}`}
 				</>
 			) : (
 				<>
 					<ThumbUpAltOutlined fontSize="small" />
-					&nbsp;{post.likes.length} {post.likes.length === 1 ? "Like" : "Likes"}
+					&nbsp;{likes?.length} {likes?.length === 1 ? "Like" : "Likes"}
 				</>
 			);
 		}
@@ -76,7 +91,7 @@ const Post = ({ post, setCurrentId, setEditing, editing }) => {
 				</CardContent>
 			</ButtonBase>
 			<CardActions className={classes.cardActions}>
-				<Button size="small" color="primary" disabled={!user} onClick={() => dispatch(likePost(post._id))}>
+				<Button size="small" color="primary" disabled={!user} onClick={() => handleLike(post._id)}>
 					<Likes />
 				</Button>
 				{(user?.googleId === post?.creator || user?._id === post?.creator) && (
