@@ -1,3 +1,4 @@
 # Ignoring Node Modules and .env
 node_modules
 .env
+build
