@@ -144,11 +144,19 @@ Our application models.
 
 Routes of our application
 
+<<<<<<< HEAD
 ### 6. .env
 
 The environment variables for our app.
 
 ### 7. index.js
+=======
+#### 6. .env
+
+The environment variables for our app.
+
+#### 7. index.js
+>>>>>>> 8d518ab3735b7b7da3b67f01c0cd83bc782c240d
 
 Main index.js file of the application.
 
