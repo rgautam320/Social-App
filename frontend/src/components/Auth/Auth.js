@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Avatar, Button, Paper, Grid, Typography, Container } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
@@ -22,7 +22,7 @@ const SignUp = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const handleShowPassword = () => setShowPassword(!showPassword);
 
-	const isLoggedIn = useSelector((state) => state.auth).isLoggedIn;
+	const profile = localStorage.getItem("profile");
 
 	const switchMode = () => {
 		setForm(initialState);
@@ -35,8 +35,12 @@ const SignUp = () => {
 
 		if (isSignup) {
 			dispatch(signup(form));
+			history.push("/");
+			window.location.reload("/");
 		} else {
 			dispatch(signin(form));
+			history.push("/");
+			window.location.reload("/");
 		}
 	};
 
@@ -58,10 +62,10 @@ const SignUp = () => {
 	const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
 	useEffect(() => {
-		if (isLoggedIn) {
+		if (profile) {
 			history.push("/");
 		}
-	}, [isLoggedIn, history]);
+	}, [history, profile]);
 
 	return (
 		<Container component="main" maxWidth="xs">

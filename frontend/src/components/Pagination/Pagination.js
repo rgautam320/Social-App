@@ -17,12 +17,11 @@ const Paginate = ({ page, search, tags }) => {
 	useEffect(() => {
 		if (tags?.length || search) {
 			dispatch(showLoading());
-
 			dispatch(getPostsBySearch({ search, tags, page }));
 			history.push(`/posts/search?page=${page}&searchQuery=${search}&tags=${tags?.join(",")}`);
 			dispatch(hideLoading());
 		} else if (tags?.length === 0 && !search) {
-			history.push("/posts");
+			history.push("/");
 			dispatch(showLoading());
 			dispatch(getPosts(page));
 			dispatch(hideLoading());

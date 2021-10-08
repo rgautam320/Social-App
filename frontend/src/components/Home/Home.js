@@ -1,6 +1,6 @@
 import { Container, Grid, Grow, Paper, TextField, AppBar } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import ChipInput from "material-ui-chip-input";
 import { getPostsBySearch } from "../../data/reducers/posts.reducers";
@@ -31,12 +31,14 @@ const Home = () => {
 
 	const token = JSON.parse(localStorage.getItem("token"));
 
+	const isLoggedIn = useSelector((state) => state.auth).isLoggedIn;
+
 	const searchPost = () => {
 		if (search?.trim() || tags.length !== 0) {
 			dispatch(getPostsBySearch({ search, tags }));
 			history.push(`/posts/search?searchQuery=${search}&tags=${tags?.join(",")}`);
 		} else {
-			history.push("/posts");
+			history.push("/");
 		}
 	};
 	const handleKeyPress = (e) => {
@@ -57,6 +59,12 @@ const Home = () => {
 			}
 		}
 	}, [history, dispatch, token]);
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			history.push("/");
+		}
+	}, [isLoggedIn, history]);
 
 	return (
 		<>

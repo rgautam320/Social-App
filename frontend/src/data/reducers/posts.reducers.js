@@ -116,6 +116,7 @@ export const postSlice = createSlice({
 			state.post = action.payload?.posts;
 			state.currentPage = action.payload?.currentPage;
 			state.numberOfPages = action.payload?.numberOfPages;
+			state.singlePost = null;
 		},
 		[getPostsBySearch.fulfilled]: (state, action) => {
 			state.post = action.payload?.posts;

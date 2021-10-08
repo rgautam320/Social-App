@@ -45,10 +45,6 @@ const PostDetails = () => {
 							<Typography variant="h6">Created by: {singlePost?.name}</Typography>
 							<Typography variant="body1">{moment(singlePost?.createdAt).fromNow()}</Typography>
 							<Divider style={{ margin: "20px 0" }} />
-							<Typography variant="body1">
-								<strong>Realtime Chat - coming soon!</strong>
-							</Typography>
-							<Divider style={{ margin: "20px 0" }} />
 							<CommentSection />
 							<Divider style={{ margin: "20px 0" }} />
 						</div>

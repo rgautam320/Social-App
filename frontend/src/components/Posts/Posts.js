@@ -7,11 +7,12 @@ import useStyles from "./styles";
 
 const Posts = ({ setCurrentId, editing, setEditing }) => {
 	const posts = useSelector((state) => state.posts);
+	const isLoading = useSelector((state) => state.loadingBar);
 	const classes = useStyles();
 
 	return (
 		<>
-			{!posts?.post?.length ? (
+			{!posts?.post?.length || isLoading?.default ? (
 				<center style={{ marginTop: "1rem" }}>
 					<CircularProgress size="5em" />
 				</center>

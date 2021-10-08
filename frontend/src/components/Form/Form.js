@@ -11,12 +11,14 @@ const initialState = { title: "", message: "", selectedFile: "" };
 const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 	const [postData, setPostData] = useState(initialState);
 	const post = useSelector((state) => (currentId ? state?.posts?.post?.find((message) => message._id === currentId) : null));
-	const [tags, setTags] = useState([]);
 	const user = useSelector((state) => state.auth).user;
 	const isLoggedIn = useSelector((state) => state.auth).isLoggedIn;
 
 	const dispatch = useDispatch();
 	const classes = useStyles();
+
+	const [tags, setTags] = useState([]);
+	const [error, setError] = useState("");
 
 	const handleAddChip = (tag) => setTags([...tags, tag]);
 
@@ -31,18 +33,25 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (!editing) {
-			dispatch(createPost({ ...postData, tags: tags, name: user?.name, creator: user?._id }));
-			dispatch(getPosts(1));
+		if (postData.title && postData.message && tags.length > 0) {
+			if (!editing) {
+				dispatch(createPost({ ...postData, tags: tags, name: user?.name, creator: user?._id }));
+				dispatch(getPosts(1));
+			} else {
+				dispatch(
+					updatePost({
+						id: currentId,
+						post: { ...postData, tags: tags, name: user?.name },
+					})
+				);
+			}
+			clear();
 		} else {
-			dispatch(
-				updatePost({
-					id: currentId,
-					post: { ...postData, tags: tags, name: user?.name },
-				})
-			);
+			setError("All the fields are required.");
+			setTimeout(() => {
+				setError("");
+			}, 3000);
 		}
-		clear();
 	};
 
 	useEffect(() => {
@@ -75,6 +84,11 @@ const Form = ({ currentId, setCurrentId, editing, setEditing }) => {
 				<div className={classes.fileInput}>
 					<FileBase className={classes.imageSelection} type="file" multiple={false} onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} />
 				</div>
+				{error && (
+					<Typography variant="h6" className={classes.error}>
+						{error}
+					</Typography>
+				)}
 				<Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>
 					Submit
 				</Button>
