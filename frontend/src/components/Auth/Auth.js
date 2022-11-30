@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Button, Paper, Grid, Typography, Container } from "@material-ui/core";
+import { Avatar, Button, Paper, Grid, Typography, Container, CircularProgress } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useStyles from "./styles";
@@ -8,7 +8,7 @@ import Input from "./Input";
 // import { GoogleLogin } from "react-google-login";
 // import Icon from "./Icon";
 // import { googleSignin, signin, signup } from "../../data/reducers/auth.reducers";
-import { googleSignin, signin, signup } from "../../data/reducers/auth.reducers";
+import { signin, signup } from "../../data/reducers/auth.reducers";
 
 const initialState = { firstName: "", lastName: "", email: "", password: "", confirmPassword: "" };
 
@@ -136,7 +136,7 @@ const SignUp = () => {
                     </form>
                 </Paper>
             ) : (
-                "Loading"
+                <CircularProgress />
             )}
         </Container>
     );
